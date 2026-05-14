@@ -1,0 +1,17 @@
+services:
+  net-board:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: net-board:embedded-redis
+    container_name: net-board-test
+    ports:
+      - "3003:3003"
+    environment:
+      # REDIS_URL deliberadamente omitido: el módulo Redis cae a 127.0.0.1:6379,
+      # que es el redis-server embebido dentro del mismo contenedor.
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      NODE_ENV: production
+    restart: unless-stopped

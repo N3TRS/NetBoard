@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - omncode-api-board
+name: Build and deploy Docker image to Azure App Service
 
 on:
   push:
@@ -9,45 +6,27 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  ACR_NAME: acromnicodeprod.azurecr.io
+  IMAGE_NAME: omncode-api-board
+  APP_NAME: omncode-api-board
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: '24.x'
-
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm run build
+          npm run test -- --passWithNoTests
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: .
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-      
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -55,11 +34,45 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_707CFA1EAC5441C5B69A80E42D5FBE0F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_74F9036AF52348339035A92ADE78D729 }}
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+      - name: Login to ACR
+        run: az acr login --name acromnicodeprod
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $ACR_NAME/$IMAGE_NAME:${{ github.sha }} .
+          docker tag $ACR_NAME/$IMAGE_NAME:${{ github.sha }} $ACR_NAME/$IMAGE_NAME:latest
+          docker push $ACR_NAME/$IMAGE_NAME:${{ github.sha }}
+          docker push $ACR_NAME/$IMAGE_NAME:latest
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'omncode-api-board'
-          slot-name: 'Production'
-          package: .
-          
+          app-name: ${{ env.APP_NAME }}
+          images: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      # DESPUÉS del deploy: la imagen nueva ya trae Redis embebido, así que al
+      # borrar REDIS_URL el restart la deja apuntando a 127.0.0.1:6379 sin caída.
+      # Si lo hacemos antes, la imagen vieja se reinicia sin Redis válido.
+      - name: Reconcile Web App settings for embedded Redis
+        run: |
+          az webapp config appsettings delete \
+            --name "$APP_NAME" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --setting-names REDIS_URL || true
+          az webapp config appsettings set \
+            --name "$APP_NAME" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --settings WEBSITES_PORT=3003
+
+      - name: Smoke check /v1/health
+        run: |
+          for i in $(seq 1 24); do
+            if curl -fsS "https://${APP_NAME}.azurewebsites.net/v1/health" >/dev/null; then
+              echo "Health check passed"
+              exit 0
+            fi
+            echo "Waiting for app to come up ($i/24)..."
+            sleep 5
+          done
+          echo "Health check failed after 2 minutes" >&2
+          exit 1
