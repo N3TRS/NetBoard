@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model WhiteboardState {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String   @unique @db.ObjectId
+  elements  String
+  updatedAt DateTime @updatedAt
+}
+
+model BoardSnapshot {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId         String   @db.ObjectId
+  sessionSnapshotId String   @unique @db.ObjectId
+  savedByEmail      String
+  elements          String
+  createdAt         DateTime @default(now())
+
+  @@index([sessionId])
+}

@@ -1,0 +1,3 @@
+export const REDIS_CLIENT = 'REDIS_CLIENT';
+
+export const WHITEBOARD_STATE_TTL_SECONDS = 60 * 60 * 24;
