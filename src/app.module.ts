@@ -6,6 +6,7 @@ import { AuthIntegrationModule } from './modules/auth-integration/auth-integrati
 import { PersistenceModule } from './modules/persistence/persistence.module';
 import { WhiteboardModule } from './modules/whiteboard/whiteboard.module';
 import { HealthModule } from './modules/health/health.module';
+import { McpModule } from './modules/mcp/mcp.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { HealthModule } from './modules/health/health.module';
     PersistenceModule,
     WhiteboardModule,
     HealthModule,
+    McpModule,
   ],
 })
 export class AppModule {}

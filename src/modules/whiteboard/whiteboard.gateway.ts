@@ -31,8 +31,7 @@ interface CollaboratorState {
 })
 @UseGuards(WhiteboardJwtGuard)
 export class WhiteboardGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(WhiteboardGateway.name);
 
   private readonly roomElements = new Map<string, unknown[]>();
@@ -63,7 +62,7 @@ export class WhiteboardGateway
   constructor(
     private readonly redis: RedisService,
     private readonly whiteboardRepo: WhiteboardStateRepository,
-  ) {}
+  ) { }
 
   handleConnection(client: Socket): void {
     this.logger.debug(`Whiteboard connected: ${client.id}`);
@@ -200,6 +199,13 @@ export class WhiteboardGateway
       x,
       y,
     });
+  }
+
+  async injectElements(sessionId: string, elements: unknown[]): Promise<void> {
+    this.roomElements.set(sessionId, elements);
+    await this.redis.setWhiteboardState(sessionId, elements);
+    void this.whiteboardRepo.upsert(sessionId, elements);
+    this.server.to(this.room(sessionId)).emit('whiteboard.update', { elements });
   }
 
   async getCurrentElements(sessionId: string): Promise<unknown[] | null> {
