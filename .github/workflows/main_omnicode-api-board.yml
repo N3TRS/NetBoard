@@ -24,9 +24,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C524113C90FB46F98CBD81958C77B2CB }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7C265A15C6A644C9A58E559D07473832 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F0A6EEBB09454E3F89967D3AB382FD75 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Login to ACR
         run: az acr login --name acromnicodeprod
