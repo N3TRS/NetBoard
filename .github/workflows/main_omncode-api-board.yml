@@ -1,0 +1,37 @@
+name: Build and push Docker image to Docker Hub
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  IMAGE_NAME: omncode-api-board
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build
+          npm run test -- --passWithNoTests
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $DOCKERHUB_USER/$IMAGE_NAME:${{ github.sha }} .
+          docker tag $DOCKERHUB_USER/$IMAGE_NAME:${{ github.sha }} $DOCKERHUB_USER/$IMAGE_NAME:latest
+          docker push $DOCKERHUB_USER/$IMAGE_NAME:${{ github.sha }}
+          docker push $DOCKERHUB_USER/$IMAGE_NAME:latest
