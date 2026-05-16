@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('v1', { exclude: ['mcp'] });
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL ?? true,
+    origin: true,
     credentials: true,
   });
 
