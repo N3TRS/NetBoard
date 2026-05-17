@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WhiteboardStateRepository } from './whiteboard-state.repository';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { WhiteboardStateRepository } from 'src/modules/persistence/repositories/whiteboard-state.repository';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 const mockPrisma = {
   whiteboardState: {

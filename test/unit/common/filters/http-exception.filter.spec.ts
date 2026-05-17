@@ -1,5 +1,5 @@
 import { ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 
 function makeHost(url = '/test', method = 'GET') {
   const json = jest.fn();

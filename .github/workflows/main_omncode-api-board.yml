@@ -14,10 +14,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: npm install, build, and test
+        env:
+          DATABASE_URL: mongodb://localhost:27017/net_sessions_ci
         run: |
           npm install
           npm run build
           npm run test:cov -- --passWithNoTests
+        
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Deploy via SSH to Azure VM
         uses: appleboy/ssh-action@v1.0.3

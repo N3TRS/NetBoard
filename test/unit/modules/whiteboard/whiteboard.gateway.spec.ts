@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WhiteboardGateway } from './whiteboard.gateway';
-import { WhiteboardJwtGuard } from './whiteboard-jwt.guard';
-import { RedisService } from '../redis/redis.service';
-import { WhiteboardStateRepository } from '../persistence/repositories/whiteboard-state.repository';
+import { WhiteboardGateway } from 'src/modules/whiteboard/whiteboard.gateway';
+import { WhiteboardJwtGuard } from 'src/modules/whiteboard/whiteboard-jwt.guard';
+import { RedisService } from 'src/modules/redis/redis.service';
+import { WhiteboardStateRepository } from 'src/modules/persistence/repositories/whiteboard-state.repository';
 import { JwtService } from '@nestjs/jwt';
 
 jest.useFakeTimers();

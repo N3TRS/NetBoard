@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetricsInterceptor } from './metrics.interceptor';
-import { MetricsService } from './metrics.service';
+import { MetricsInterceptor } from 'src/modules/metrics/metrics.interceptor';
+import { MetricsService } from 'src/modules/metrics/metrics.service';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of } from 'rxjs';
 

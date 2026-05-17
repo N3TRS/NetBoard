@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { McpController } from './mcp.controller';
-import { McpService } from './mcp.service';
+import { McpController } from 'src/modules/mcp/mcp.controller';
+import { McpService } from 'src/modules/mcp/mcp.service';
 
 const mockTransportInstance = {
   handleRequest: jest.fn().mockResolvedValue(undefined),

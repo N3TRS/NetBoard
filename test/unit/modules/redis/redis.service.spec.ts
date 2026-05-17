@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisService } from './redis.service';
-import { REDIS_CLIENT, WHITEBOARD_STATE_TTL_SECONDS } from './redis.constants';
+import { RedisService } from 'src/modules/redis/redis.service';
+import { REDIS_CLIENT, WHITEBOARD_STATE_TTL_SECONDS } from 'src/modules/redis/redis.constants';
 
 const mockRedis = {
   set: jest.fn(),

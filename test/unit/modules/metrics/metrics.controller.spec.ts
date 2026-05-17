@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetricsController } from './metrics.controller';
-import { MetricsService } from './metrics.service';
+import { MetricsController } from 'src/modules/metrics/metrics.controller';
+import { MetricsService } from 'src/modules/metrics/metrics.service';
 import { Response } from 'express';
 
 const CONTENT_TYPE = 'text/plain; version=0.0.4; charset=utf-8';

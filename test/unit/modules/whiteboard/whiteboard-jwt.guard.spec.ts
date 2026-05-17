@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WhiteboardJwtGuard } from './whiteboard-jwt.guard';
+import { WhiteboardJwtGuard } from 'src/modules/whiteboard/whiteboard-jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 

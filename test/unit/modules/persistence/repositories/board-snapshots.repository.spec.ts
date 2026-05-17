@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BoardSnapshotsRepository } from './board-snapshots.repository';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { BoardSnapshotsRepository } from 'src/modules/persistence/repositories/board-snapshots.repository';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 const mockPrisma = {
   boardSnapshot: {
