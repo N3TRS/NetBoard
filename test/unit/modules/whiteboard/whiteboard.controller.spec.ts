@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ForbiddenException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { WhiteboardController } from './whiteboard.controller';
-import { BoardSnapshotsRepository } from '../persistence/repositories/board-snapshots.repository';
-import { JwtAuthGuard } from '../auth-integration/guards/jwt-auth.guard';
+import { WhiteboardController } from 'src/modules/whiteboard/whiteboard.controller';
+import { BoardSnapshotsRepository } from 'src/modules/persistence/repositories/board-snapshots.repository';
+import { JwtAuthGuard } from 'src/modules/auth-integration/guards/jwt-auth.guard';
 import { Request } from 'express';
 
 const mockSnapshots = {

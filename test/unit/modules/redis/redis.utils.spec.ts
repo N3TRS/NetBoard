@@ -1,4 +1,4 @@
-import { whiteboardStateKey } from './redis.utils';
+import { whiteboardStateKey } from 'src/modules/redis/redis.utils';
 
 describe('whiteboardStateKey', () => {
   it('builds correct Redis key', () => {

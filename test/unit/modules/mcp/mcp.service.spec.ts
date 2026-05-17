@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { McpService } from './mcp.service';
-import { WhiteboardGateway } from '../whiteboard/whiteboard.gateway';
+import { McpService } from 'src/modules/mcp/mcp.service';
+import { WhiteboardGateway } from 'src/modules/whiteboard/whiteboard.gateway';
 
 const registeredTools: Record<string, (args: Record<string, unknown>) => Promise<{ content: { type: string; text: string }[] }>> = {};
 
